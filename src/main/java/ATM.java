@@ -10,6 +10,15 @@ public class ATM {
     private static final String DEPOSIT = "Deposit";
     private static final String WITHDRAW = "Withdraw";
 
+//    Errors
+    private static final String INSUFFICIENT_FUNDS_ERROR = "Incorrect or Insufficient funds";
+    private static final String INCORRECT_DEPOSIT_AMOUNT = "Incorrect Deposit amount.";
+    private static final String DEPOSIT_AMOUNT_CANNOT_BE_ZERO = "Deposit amount cannot be zero.";
+    private static final String NOT_A_VALID_DENOMINATION = " is not a valid denomination !";
+    private static final String NOT_DISPENSABLE = "Requested withdraw amount NOT dispensable";
+    private static final String NO_VALID_DENOMINATIONS_FOUND = "No valid denominations found !!";
+    private static final String AS_PROGRAM_ARGS_SEPARATED_BY_SPACES = "Restart application passing valid denominations as program args. ( separated by spaces )";
+
     public static void main(String[] args) {
 
         ATM atm = new ATM();
@@ -31,8 +40,8 @@ public class ATM {
 
         validDenominations = Arrays.stream(args).map(Integer::valueOf).collect(Collectors.toSet());
         if (validDenominations.isEmpty()) {
-            System.out.println("No valid denominations found !!");
-            System.out.println("Restart application passing valid denominations as program args. ( separated by spaces )");
+            System.out.println(NO_VALID_DENOMINATIONS_FOUND);
+            System.out.println(AS_PROGRAM_ARGS_SEPARATED_BY_SPACES);
             return true;
         }
 
@@ -55,7 +64,7 @@ public class ATM {
                 break;
 
             case WITHDRAW:
-                withdraw(Integer.valueOf(amount));
+                withdraw(Integer.parseInt(amount));
                 break;
 
             default:
@@ -107,7 +116,7 @@ public class ATM {
 
             highestDenomination = totalMoney.lowerKey(highestDenomination);
             if (highestDenomination == null) {
-                System.out.println("Requested withdraw amount NOT dispensable");
+                System.out.println(NOT_DISPENSABLE);
                 return false;
             }
         }
@@ -131,7 +140,7 @@ public class ATM {
 
             highestDenomination = totalMoney.lowerKey(highestDenomination);
             if (highestDenomination == null) {
-                System.out.println("Requested withdraw amount NOT dispensable");
+                System.out.println(NOT_DISPENSABLE);
                 return false;
             }
         }
@@ -157,15 +166,15 @@ public class ATM {
         for (Map.Entry<Integer, Integer> entry: moneyCount.entrySet()){
 
             if (entry.getValue() < 0) {
-                System.out.println("Incorrect Deposit amount.");
+                System.out.println(INCORRECT_DEPOSIT_AMOUNT);
                 return false;
             }
             if (entry.getValue() == 0) {
-                System.out.println("Deposit amount cannot be zero.");
+                System.out.println(DEPOSIT_AMOUNT_CANNOT_BE_ZERO);
                 return false;
             }
             if (! validDenominations.contains(entry.getKey())) {
-                System.out.println(entry.getKey() + " is not a valid denomination !");
+                System.out.println(entry.getKey() + NOT_A_VALID_DENOMINATION);
                 return false;
             }
         }
@@ -175,7 +184,7 @@ public class ATM {
     private boolean withdrawValidationsSuccess(Integer amount) {
 
         if (amount < 0 || amount == 0 || amount > totalAmount) {
-            System.out.println("Incorrect or Insufficient funds");
+            System.out.println(INSUFFICIENT_FUNDS_ERROR);
             return false;
         }
 
